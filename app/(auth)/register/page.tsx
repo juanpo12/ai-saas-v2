@@ -28,10 +28,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[#0D0F12] flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-[#0D0F12] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-6 sm:mb-8">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-linear-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
             <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
           </div>
           <h1 className="ml-2 sm:ml-3 text-xl sm:text-2xl font-bold text-white">AI Agents</h1>

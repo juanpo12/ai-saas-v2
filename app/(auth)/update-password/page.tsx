@@ -34,7 +34,7 @@ export default function UpdatePasswordPage() {
   }
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[#0D0F12] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0D0F12] flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-[#1A1D24] border border-white/10 rounded-2xl p-8">
         <h2 className="text-2xl font-bold text-white mb-2">Definir nueva contraseña</h2>
         <p className="text-gray-400 text-sm mb-6">Ingresa y confirma tu nueva contraseña</p>
