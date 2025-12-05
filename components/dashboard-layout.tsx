@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Bot, Plug, Key, MessageSquare, Wrench, FileText, Search, Command, Crown, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { useI18n } from "@/lib/i18n"
 import { LanguageSelector } from "@/components/language-selector"
+import { supabase } from "@/lib/supabase/client"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -25,6 +26,7 @@ const navItems = [
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { t } = useI18n()
@@ -151,6 +153,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           <LanguageSelector />
+          <Button
+            variant="ghost"
+            className="ml-2 rounded-lg"
+            onClick={async () => {
+              await supabase.auth.signOut()
+              router.push("/login")
+            }}
+          >
+            Logout
+          </Button>
         </header>
 
         {/* Content Area */}
