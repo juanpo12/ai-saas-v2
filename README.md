@@ -141,6 +141,184 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 \`\`\`
 
+## Supabase
+
+### Configuración rápida
+
+- Crea un proyecto en Supabase y copia `Project URL` y `anon key`.
+- Añade las variables en `.env.local` como se muestra arriba.
+- Instala dependencias: `pnpm add @supabase/ssr @supabase/supabase-js`.
+
+### Clientes
+
+**Cliente de navegador** (`lib/supabase/client.ts`):
+
+```ts
+import { createBrowserClient } from "@supabase/ssr"
+
+export const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+```
+
+**Cliente de servidor** (`lib/supabase/server.ts`):
+
+```ts
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
+
+export function createSupabaseServer() {
+  const cookieStore = cookies()
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options),
+            )
+          } catch {}
+        },
+      },
+    },
+  )
+}
+```
+
+### Middleware de protección de rutas
+
+- Controla acceso a rutas protegidas y redirecciones entre páginas públicas/privadas.
+- Invitados acceden a `/login` y `/register`; usuarios autenticados son redirigidos a `/` si intentan entrar allí.
+
+Fragmento clave (`middleware.ts`):
+
+```ts
+import { NextRequest, NextResponse } from "next/server"
+import { createServerClient } from "@supabase/ssr"
+
+const AUTH_PAGES = new Set<`/${string}`>([
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/update-password",
+])
+
+export async function middleware(req: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request: req })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return req.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => req.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({ request: req })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options),
+          )
+        },
+      },
+    },
+  )
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { pathname } = new URL(req.url)
+
+  if (user && AUTH_PAGES.has(pathname as `/${string}`)) {
+    return NextResponse.redirect(new URL("/", req.url))
+  }
+
+  if (!user && !AUTH_PAGES.has(pathname as `/${string}`)) {
+    const loginUrl = new URL("/login", req.url)
+    const target = pathname === "/login" || pathname === "/register" ? "/" : pathname
+    loginUrl.searchParams.set("redirectTo", target)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  return supabaseResponse
+}
+```
+
+### Uso en Server Components y Server Actions
+
+Obtén el usuario autenticado o ejecuta acciones seguras en el servidor:
+
+```ts
+// app/(dashboard)/agents/actions.ts
+"use server"
+import { createSupabaseServer } from "@/lib/supabase/server"
+
+export async function getCurrentUser() {
+  const supabase = createSupabaseServer()
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}
+```
+
+### Uso en Client Components
+
+Autenticación en el cliente con el browser client:
+
+```ts
+import { supabase } from "@/lib/supabase/client"
+
+async function login(email: string, password: string) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw error
+}
+
+async function logout() {
+  await supabase.auth.signOut()
+}
+```
+
+### Logout en la navbar
+
+Añade un botón junto al selector de idioma usando el cliente de navegador:
+
+```tsx
+import { supabase } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+
+function NavbarActions() {
+  const router = useRouter()
+  return (
+    <>
+      {/* <LanguageSelector /> */}
+      <Button
+        variant="ghost"
+        className="ml-2 rounded-lg"
+        onClick={async () => {
+          await supabase.auth.signOut()
+          router.push("/login")
+        }}
+      >
+        Logout
+      </Button>
+    </>
+  )
+}
+```
+
+### Cookies y SSR
+
+- Se usan los métodos `cookies.getAll` y `cookies.setAll` para compatibilidad futura de `@supabase/ssr`.
+- No expongas claves en el cliente; mantén todas las variables en `.env.local`.
+
 ## Roadmap
 
 - [x] Supabase authentication (login, register, reset)

@@ -148,7 +148,7 @@ export default function PricingPage() {
             <span className="hidden sm:inline">{t("agent.back")}</span>
           </Link>
           <div className="flex items-center">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-linear-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
               <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <span className="ml-2 font-bold text-sm sm:text-base">AI Agents</span>
@@ -212,7 +212,7 @@ export default function PricingPage() {
 
                 <div className="mb-5 sm:mb-6">
                   <div
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-3 sm:mb-4`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-linear-to-br ${plan.color} flex items-center justify-center mb-3 sm:mb-4`}
                   >
                     <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>

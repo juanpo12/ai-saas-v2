@@ -96,7 +96,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </nav>
 
         <div className="p-4 space-y-3">
-          <div className="bg-gradient-to-br from-sidebar-accent to-sidebar-accent/50 rounded-xl p-4 border border-sidebar-border">
+          <div className="bg-linear-to-br from-sidebar-accent to-sidebar-accent/50 rounded-xl p-4 border border-sidebar-border">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-lg bg-muted flex items-center justify-center">
                 <Bot className="w-3.5 h-3.5 text-muted-foreground" />
@@ -116,7 +116,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <div className="p-4 border-t border-sidebar-border">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white">
               JD
             </div>
             <div className="flex-1 min-w-0">

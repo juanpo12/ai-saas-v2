@@ -105,7 +105,7 @@ export default function MessagesLayout({ children }: { children: React.ReactNode
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0">
                       {conversation.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
