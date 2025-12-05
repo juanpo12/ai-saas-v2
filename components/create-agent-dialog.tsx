@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { X, Sparkles, Upload, User } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
 
 interface CreateAgentDialogProps {
   onClose: () => void
@@ -48,6 +49,7 @@ const providerModels: Record<string, { value: string; label: string }[]> = {
 }
 
 export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps) {
+  const { t } = useI18n()
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -95,10 +97,8 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
               <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg lg:text-xl font-semibold text-foreground">Crear Nuevo Agente</h2>
-              <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">
-                Configura tu agente de IA en segundos
-              </p>
+              <h2 className="text-lg lg:text-xl font-semibold text-foreground">{t("createAgent.title")}</h2>
+              <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">{t("createAgent.subtitle")}</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} className="rounded-xl hover:bg-accent">
@@ -111,7 +111,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
           <div className="space-y-4">
             {/* Avatar */}
             <div>
-              <Label className="text-sm font-medium text-foreground mb-2 block">Avatar del Agente</Label>
+              <Label className="text-sm font-medium text-foreground mb-2 block">{t("createAgent.avatar")}</Label>
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-accent border-2 border-border overflow-hidden flex items-center justify-center">
@@ -141,9 +141,8 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
                     className="rounded-xl text-sm"
                   >
                     <Upload className="w-4 h-4 mr-2" />
-                    Subir Imagen
+                    {t("createAgent.uploadPhoto")}
                   </Button>
-                  <p className="text-xs text-muted-foreground mt-2">Dale una cara a tu agente (opcional)</p>
                 </div>
               </div>
             </div>
@@ -151,11 +150,11 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {/* Name */}
             <div>
               <Label htmlFor="name" className="text-sm font-medium text-foreground mb-2 block">
-                Nombre del Agente
+                {t("createAgent.name")}
               </Label>
               <Input
                 id="name"
-                placeholder="ej: Customer Support Bot"
+                placeholder={t("createAgent.namePlaceholder")}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="rounded-xl bg-input border-border h-10 lg:h-11"
@@ -166,11 +165,11 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {/* Description */}
             <div>
               <Label htmlFor="description" className="text-sm font-medium text-foreground mb-2 block">
-                Descripción
+                {t("createAgent.description")}
               </Label>
               <Textarea
                 id="description"
-                placeholder="Describe qué hace este agente..."
+                placeholder={t("createAgent.descriptionPlaceholder")}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="rounded-xl bg-input border-border resize-none text-sm"
@@ -182,7 +181,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {/* Provider */}
             <div>
               <Label htmlFor="provider" className="text-sm font-medium text-foreground mb-2 block">
-                Proveedor de IA
+                {t("createAgent.provider")}
               </Label>
               <select
                 id="provider"
@@ -193,7 +192,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
                 className="w-full px-4 py-2.5 rounded-xl bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 required
               >
-                <option value="">Selecciona un proveedor</option>
+                <option value="">{t("createAgent.selectProvider")}</option>
                 {availableProviders.map((provider) => (
                   <option key={provider} value={provider}>
                     {provider === "openai" && "OpenAI"}
@@ -208,7 +207,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {formData.provider && (
               <div>
                 <Label htmlFor="keyId" className="text-sm font-medium text-foreground mb-2 block">
-                  API Key
+                  {t("createAgent.apiKey")}
                 </Label>
                 <select
                   id="keyId"
@@ -217,7 +216,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
                   className="w-full px-4 py-2.5 rounded-xl bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                   required
                 >
-                  <option value="">Selecciona una key</option>
+                  <option value="">{t("createAgent.selectKey")}</option>
                   {availableKeys.map((key) => (
                     <option key={key.id} value={key.id}>
                       {key.name}
@@ -231,7 +230,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {formData.provider && formData.keyId && (
               <div>
                 <Label htmlFor="model" className="text-sm font-medium text-foreground mb-2 block">
-                  Modelo
+                  {t("createAgent.model")}
                 </Label>
                 <select
                   id="model"
@@ -240,7 +239,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
                   className="w-full px-4 py-2.5 rounded-xl bg-input border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                   required
                 >
-                  <option value="">Selecciona un modelo</option>
+                  <option value="">{t("createAgent.selectModel")}</option>
                   {availableModels.map((model) => (
                     <option key={model.value} value={model.value}>
                       {model.label}
@@ -253,7 +252,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
             {/* Temperature */}
             <div>
               <Label htmlFor="temperature" className="text-sm font-medium text-foreground mb-2 block">
-                Temperatura
+                {t("agent.temperature")}
                 <span className="text-muted-foreground font-normal ml-2">({formData.temperature})</span>
               </Label>
               <input
@@ -267,16 +266,16 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
                 className="w-full h-2 bg-input rounded-lg appearance-none cursor-pointer accent-primary"
               />
               <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                <span>Preciso</span>
-                <span>Balanceado</span>
-                <span>Creativo</span>
+                <span>{t("agent.precise")}</span>
+                <span>{t("agent.balanced")}</span>
+                <span>{t("agent.creative")}</span>
               </div>
             </div>
 
             {/* System Prompt */}
             <div>
               <Label htmlFor="prompt" className="text-sm font-medium text-foreground mb-2 block">
-                System Prompt
+                {t("agent.systemPrompt")}
                 <span className="text-muted-foreground font-normal ml-2">(opcional)</span>
               </Label>
               <Textarea
@@ -298,7 +297,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
               onClick={onClose}
               className="rounded-xl bg-transparent w-full sm:w-auto"
             >
-              Cancelar
+              {t("createAgent.cancel")}
             </Button>
             <Button
               type="submit"
@@ -308,7 +307,7 @@ export function CreateAgentDialog({ onClose, onCreate }: CreateAgentDialogProps)
               }
             >
               <Sparkles className="w-4 h-4 mr-2" />
-              Crear Agente
+              {t("createAgent.create")}
             </Button>
           </div>
         </form>

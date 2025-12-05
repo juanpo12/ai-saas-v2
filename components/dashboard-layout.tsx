@@ -2,29 +2,32 @@
 
 import type React from "react"
 import { Button } from "@/components/ui/button"
-import { Bot, Plug, Key, MessageSquare, Wrench, FileText, Search, Plus, Command, Crown, Menu, X } from "lucide-react"
+import { Bot, Plug, Key, MessageSquare, Wrench, FileText, Search, Command, Crown, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
+import { useI18n } from "@/lib/i18n"
+import { LanguageSelector } from "@/components/language-selector"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 const navItems = [
-  { icon: Bot, label: "Agentes", href: "/agents" },
-  { icon: Plug, label: "Conexiones", href: "/connections" },
-  { icon: Key, label: "Keys", href: "/keys" },
-  { icon: MessageSquare, label: "Mensajes", href: "/messages" },
-  { icon: Wrench, label: "Herramientas", href: "/tools" },
-  { icon: FileText, label: "Logs", href: "/logs" },
+  { icon: Bot, labelKey: "nav.agents", href: "/agents" },
+  { icon: Plug, labelKey: "nav.connections", href: "/connections" },
+  { icon: Key, labelKey: "nav.keys", href: "/keys" },
+  { icon: MessageSquare, labelKey: "nav.messages", href: "/messages" },
+  { icon: Wrench, labelKey: "nav.tools", href: "/tools" },
+  { icon: FileText, labelKey: "nav.logs", href: "/logs" },
 ]
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { t } = useI18n()
 
   useEffect(() => {
     setMobileMenuOpen(false)
@@ -74,7 +77,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
             return (
               <Link
-                key={item.label}
+                key={item.labelKey}
                 href={item.href}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
@@ -84,7 +87,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 )}
               >
                 <Icon className="w-4 h-4" />
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             )
           })}
@@ -96,14 +99,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="w-6 h-6 rounded-lg bg-muted flex items-center justify-center">
                 <Bot className="w-3.5 h-3.5 text-muted-foreground" />
               </div>
-              <span className="text-xs font-medium text-sidebar-foreground/60">Plan Actual</span>
+              <span className="text-xs font-medium text-sidebar-foreground/60">{t("plan.current")}</span>
             </div>
-            <p className="text-sm font-semibold text-sidebar-foreground mb-1">Free</p>
-            <p className="text-xs text-sidebar-foreground/60 mb-3">1/1 agentes usados</p>
+            <p className="text-sm font-semibold text-sidebar-foreground mb-1">{t("plan.free")}</p>
+            <p className="text-xs text-sidebar-foreground/60 mb-3">1/1 {t("plan.agentsUsed")}</p>
             <Link href="/pricing">
               <Button className="w-full h-8 text-xs rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md">
                 <Crown className="w-3 h-3 mr-1.5" />
-                Mejorar Plan
+                {t("plan.upgrade")}
               </Button>
             </Link>
           </div>
@@ -140,17 +143,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               className="flex items-center gap-2 px-3 lg:px-4 py-2 rounded-xl bg-input hover:bg-accent transition-colors text-muted-foreground hover:text-foreground group flex-1 lg:flex-none lg:w-96"
             >
               <Search className="w-4 h-4 shrink-0" />
-              <span className="text-sm flex-1 text-left truncate">Buscar...</span>
+              <span className="text-sm flex-1 text-left truncate">{t("header.search")}</span>
               <kbd className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-muted text-xs font-mono">
                 <Command className="w-3 h-3" />K
               </kbd>
             </button>
           </div>
 
-          <Button className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 ml-2 shrink-0">
-            <Plus className="w-4 h-4 lg:mr-2" />
-            <span className="hidden lg:inline">Nuevo Agente</span>
-          </Button>
+          <LanguageSelector />
         </header>
 
         {/* Content Area */}

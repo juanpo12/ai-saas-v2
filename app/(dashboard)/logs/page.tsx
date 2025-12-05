@@ -1,5 +1,8 @@
+"use client"
+
 import { Filter, Download, AlertCircle, CheckCircle2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/lib/i18n"
 
 const logs = [
   {
@@ -45,21 +48,22 @@ const logs = [
 ]
 
 export default function LogsPage() {
+  const { t } = useI18n()
+
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Logs</h1>
-          <p className="text-muted-foreground mt-1">Historial de actividad de todos tus agentes</p>
+          <h1 className="text-3xl font-bold text-foreground">{t("logs.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("logs.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="rounded-xl bg-transparent">
             <Filter className="w-4 h-4 mr-2" />
-            Filtrar
+            {t("logs.all")}
           </Button>
           <Button variant="outline" className="rounded-xl bg-transparent">
             <Download className="w-4 h-4 mr-2" />
-            Exportar
           </Button>
         </div>
       </div>

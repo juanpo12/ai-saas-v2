@@ -1,12 +1,15 @@
+"use client"
+
 import { Plus, Code, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/lib/i18n"
 
 const tools = [
   {
     id: 1,
     name: "Weather API",
     type: "HTTP",
-    description: "Obtiene información del clima en tiempo real",
+    description: "Get real-time weather information",
     endpoint: "https://api.weather.com/v1/current",
     usedBy: 3,
   },
@@ -14,7 +17,7 @@ const tools = [
     id: 2,
     name: "Database Query",
     type: "NodeJS",
-    description: "Consulta la base de datos de usuarios",
+    description: "Query user database",
     endpoint: "function queryUsers()",
     usedBy: 5,
   },
@@ -22,7 +25,7 @@ const tools = [
     id: 3,
     name: "Send Email",
     type: "HTTP",
-    description: "Envía emails transaccionales",
+    description: "Send transactional emails",
     endpoint: "https://api.sendgrid.com/v3/mail/send",
     usedBy: 8,
   },
@@ -30,23 +33,25 @@ const tools = [
     id: 4,
     name: "Calculate Price",
     type: "NodeJS",
-    description: "Calcula precios con descuentos y promociones",
+    description: "Calculate prices with discounts",
     endpoint: "function calculatePrice()",
     usedBy: 2,
   },
 ]
 
 export default function ToolsPage() {
+  const { t } = useI18n()
+
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Herramientas</h1>
-          <p className="text-muted-foreground mt-1">Scripts y funciones para extender tus agentes</p>
+          <h1 className="text-3xl font-bold text-foreground">{t("tools.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("tools.subtitle")}</p>
         </div>
         <Button className="rounded-xl bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
-          Nueva Herramienta
+          {t("tools.create")}
         </Button>
       </div>
 
@@ -76,9 +81,11 @@ export default function ToolsPage() {
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Usado por {tool.usedBy} agentes</span>
+              <span className="text-xs text-muted-foreground">
+                {tool.usedBy} {t("agents.title").toLowerCase()}
+              </span>
               <Button variant="outline" size="sm" className="rounded-lg bg-transparent">
-                Editar
+                {t("common.edit")}
               </Button>
             </div>
           </div>

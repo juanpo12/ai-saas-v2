@@ -8,6 +8,7 @@ import { Plus, Bot, MoreVertical, Play, Pause } from "lucide-react"
 import { AgentEditor } from "@/components/agent-editor"
 import { CreateAgentDialog } from "@/components/create-agent-dialog"
 import { cn } from "@/lib/utils"
+import { useI18n } from "@/lib/i18n"
 
 const mockAgents = [
   {
@@ -39,6 +40,7 @@ const mockAgents = [
 export function AgentsView() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const { t } = useI18n()
 
   const handleCreateAgent = (agentData: any) => {
     console.log("[v0] Creating agent:", agentData)
@@ -53,15 +55,15 @@ export function AgentsView() {
       <div className="p-4 lg:p-8 max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 lg:mb-8">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 lg:mb-2">Agentes</h1>
-            <p className="text-sm lg:text-base text-muted-foreground">Gestiona y configura tus agentes de IA</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1 lg:mb-2">{t("agents.title")}</h1>
+            <p className="text-sm lg:text-base text-muted-foreground">{t("agents.subtitle")}</p>
           </div>
           <Button
             onClick={() => setShowCreateDialog(true)}
             className="rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 h-10 lg:h-11 px-4 lg:px-6 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Crear Agente
+            {t("agents.create")}
           </Button>
         </div>
 
@@ -103,12 +105,12 @@ export function AgentsView() {
                       {agent.status === "active" ? (
                         <>
                           <Play className="w-3 h-3 mr-1 inline" />
-                          Activo
+                          {t("agents.active")}
                         </>
                       ) : (
                         <>
                           <Pause className="w-3 h-3 mr-1 inline" />
-                          Pausado
+                          {t("agents.paused")}
                         </>
                       )}
                     </Badge>

@@ -8,23 +8,23 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Bot, Mail, Lock, ArrowRight } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useI18n()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    // TODO: Implement Supabase login
     setTimeout(() => setIsLoading(false), 1000)
   }
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-[#0D0F12] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
-        {/* Logo - responsive sizing */}
         <div className="flex items-center justify-center mb-6 sm:mb-8">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
             <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
@@ -34,14 +34,14 @@ export default function LoginPage() {
 
         <div className="bg-[#1A1D24] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="mb-5 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Bienvenido de vuelta</h2>
-            <p className="text-gray-400 text-sm">Ingresa a tu cuenta para continuar</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{t("auth.welcome")}</h2>
+            <p className="text-gray-400 text-sm">{t("auth.welcomeSubtitle")}</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-300 text-sm font-medium">
-                Email
+                {t("auth.email")}
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -60,10 +60,10 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-gray-300 text-sm font-medium">
-                  Contraseña
+                  {t("auth.password")}
                 </Label>
                 <Link href="/forgot-password" className="text-xs text-[#5B9FFF] hover:text-[#4A8FEF] transition-colors">
-                  ¿Olvidaste tu contraseña?
+                  {t("auth.forgotPassword")}
                 </Link>
               </div>
               <div className="relative">
@@ -88,11 +88,11 @@ export default function LoginPage() {
               {isLoading ? (
                 <span className="flex items-center">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                  Ingresando...
+                  {t("common.loading")}
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
-                  Ingresar
+                  {t("auth.login")}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </span>
               )}
@@ -101,24 +101,13 @@ export default function LoginPage() {
 
           <div className="mt-5 sm:mt-6 text-center">
             <p className="text-gray-400 text-sm">
-              ¿No tienes una cuenta?{" "}
+              {t("auth.noAccount")}{" "}
               <Link href="/register" className="text-[#5B9FFF] hover:text-[#4A8FEF] font-medium transition-colors">
-                Regístrate gratis
+                {t("auth.register")}
               </Link>
             </p>
           </div>
         </div>
-
-        <p className="text-center text-gray-500 text-xs mt-6 sm:mt-8 px-4">
-          Al continuar, aceptas nuestros{" "}
-          <Link href="/terms" className="text-gray-400 hover:text-gray-300 transition-colors">
-            Términos de Servicio
-          </Link>{" "}
-          y{" "}
-          <Link href="/privacy" className="text-gray-400 hover:text-gray-300 transition-colors">
-            Política de Privacidad
-          </Link>
-        </p>
       </div>
     </div>
   )

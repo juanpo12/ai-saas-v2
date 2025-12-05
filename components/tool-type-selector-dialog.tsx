@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button"
 import { Globe, Code, MessageSquare } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useI18n } from "@/lib/i18n"
 
 interface ToolTypeSelectorDialogProps {
   open: boolean
@@ -13,39 +14,40 @@ interface ToolTypeSelectorDialogProps {
   agentId: string
 }
 
-const toolTypes = [
-  {
-    id: "http",
-    name: "HTTP Request",
-    description: "Realiza llamadas HTTP a APIs externas",
-    icon: Globe,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/30",
-  },
-  {
-    id: "nodejs",
-    name: "NodeJS Script",
-    description: "Ejecuta código JavaScript personalizado",
-    icon: Code,
-    color: "text-green-500",
-    bgColor: "bg-green-500/10",
-    borderColor: "border-green-500/30",
-  },
-  {
-    id: "whatsapp",
-    name: "Send WhatsApp",
-    description: "Envía mensajes por WhatsApp",
-    icon: MessageSquare,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/30",
-  },
-]
-
 export function ToolTypeSelectorDialog({ open, onOpenChange, agentId }: ToolTypeSelectorDialogProps) {
   const router = useRouter()
+  const { t } = useI18n()
   const [selectedType, setSelectedType] = useState<string | null>(null)
+
+  const toolTypes = [
+    {
+      id: "http",
+      name: t("toolSelector.http"),
+      description: t("toolSelector.httpDesc"),
+      icon: Globe,
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/30",
+    },
+    {
+      id: "nodejs",
+      name: t("toolSelector.nodejs"),
+      description: t("toolSelector.nodejsDesc"),
+      icon: Code,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+      borderColor: "border-green-500/30",
+    },
+    {
+      id: "whatsapp",
+      name: t("toolSelector.whatsapp"),
+      description: t("toolSelector.whatsappDesc"),
+      icon: MessageSquare,
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/30",
+    },
+  ]
 
   const handleContinue = () => {
     if (selectedType === "http") {
@@ -63,11 +65,9 @@ export function ToolTypeSelectorDialog({ open, onOpenChange, agentId }: ToolType
       <DialogContent className="sm:max-w-2xl bg-[#0D0F12] border-border rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">
-            Selecciona el tipo de herramienta
+            {t("toolSelector.title")}
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">
-            Elige qué tipo de herramienta quieres crear para tu agente
-          </DialogDescription>
+          <DialogDescription className="text-sm text-muted-foreground">{t("toolSelector.subtitle")}</DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-3 sm:gap-4 py-4">
@@ -113,14 +113,14 @@ export function ToolTypeSelectorDialog({ open, onOpenChange, agentId }: ToolType
             onClick={() => onOpenChange(false)}
             className="rounded-xl bg-transparent w-full sm:w-auto"
           >
-            Cancelar
+            {t("common.cancel")}
           </Button>
           <Button
             onClick={handleContinue}
             disabled={!selectedType}
             className="rounded-xl bg-primary hover:bg-primary/90 w-full sm:w-auto"
           >
-            Continuar
+            {t("toolSelector.continue")}
           </Button>
         </div>
       </DialogContent>

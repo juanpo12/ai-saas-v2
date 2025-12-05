@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Plus, X, Play, Loader2, Check, AlertCircle } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
 
 const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
 
@@ -25,6 +26,7 @@ interface Header {
 export default function NewHttpToolPage() {
   const router = useRouter()
   const params = useParams()
+  const { t } = useI18n()
   const agentId = params.id as string
 
   const [toolName, setToolName] = useState("")
@@ -95,17 +97,17 @@ export default function NewHttpToolPage() {
             className="rounded-xl hover:bg-accent shrink-0"
           >
             <ArrowLeft className="w-4 h-4 lg:mr-2" />
-            <span className="hidden lg:inline">Volver</span>
+            <span className="hidden lg:inline">{t("httpTool.back")}</span>
           </Button>
           <div className="h-6 w-px bg-border hidden sm:block" />
           <div className="min-w-0">
-            <h2 className="text-sm lg:text-lg font-semibold text-foreground truncate">Nueva Herramienta HTTP</h2>
-            <p className="text-xs text-muted-foreground hidden sm:block">Configura una llamada HTTP externa</p>
+            <h2 className="text-sm lg:text-lg font-semibold text-foreground truncate">{t("httpTool.title")}</h2>
+            <p className="text-xs text-muted-foreground hidden sm:block">{t("httpTool.subtitle")}</p>
           </div>
         </div>
 
         <Button onClick={handleSave} className="rounded-xl bg-primary hover:bg-primary/90 w-full sm:w-auto">
-          Guardar Herramienta
+          {t("httpTool.save")}
         </Button>
       </div>
 
@@ -113,21 +115,23 @@ export default function NewHttpToolPage() {
         <div className="max-w-4xl mx-auto space-y-4 lg:space-y-6">
           {/* Basic Info */}
           <Card className="rounded-2xl bg-card border-border p-4 lg:p-6">
-            <h3 className="text-base lg:text-lg font-semibold text-foreground mb-3 lg:mb-4">Información Básica</h3>
+            <h3 className="text-base lg:text-lg font-semibold text-foreground mb-3 lg:mb-4">
+              {t("httpTool.basicInfo")}
+            </h3>
             <div className="space-y-4">
               <div>
-                <Label className="text-sm font-medium text-foreground mb-2 block">Nombre de la Herramienta</Label>
+                <Label className="text-sm font-medium text-foreground mb-2 block">{t("httpTool.name")}</Label>
                 <Input
-                  placeholder="ej: Get User Data"
+                  placeholder={t("httpTool.namePlaceholder")}
                   value={toolName}
                   onChange={(e) => setToolName(e.target.value)}
                   className="rounded-xl bg-input border-border"
                 />
               </div>
               <div>
-                <Label className="text-sm font-medium text-foreground mb-2 block">Descripción</Label>
+                <Label className="text-sm font-medium text-foreground mb-2 block">{t("httpTool.description")}</Label>
                 <Textarea
-                  placeholder="Describe qué hace esta herramienta..."
+                  placeholder={t("httpTool.descriptionPlaceholder")}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="rounded-xl bg-input border-border resize-none"
@@ -140,12 +144,12 @@ export default function NewHttpToolPage() {
           {/* Request Configuration */}
           <Card className="rounded-2xl bg-card border-border p-4 lg:p-6">
             <h3 className="text-base lg:text-lg font-semibold text-foreground mb-3 lg:mb-4">
-              Configuración de Request
+              {t("httpTool.requestConfig")}
             </h3>
             <div className="space-y-4 lg:space-y-6">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="w-full sm:w-32 lg:w-40">
-                  <Label className="text-sm font-medium text-foreground mb-2 block">Método</Label>
+                  <Label className="text-sm font-medium text-foreground mb-2 block">{t("httpTool.method")}</Label>
                   <select
                     value={method}
                     onChange={(e) => setMethod(e.target.value)}
@@ -159,9 +163,9 @@ export default function NewHttpToolPage() {
                   </select>
                 </div>
                 <div className="flex-1">
-                  <Label className="text-sm font-medium text-foreground mb-2 block">URL</Label>
+                  <Label className="text-sm font-medium text-foreground mb-2 block">{t("httpTool.url")}</Label>
                   <Input
-                    placeholder="https://api.example.com/endpoint"
+                    placeholder={t("httpTool.urlPlaceholder")}
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     className="rounded-xl bg-input border-border font-mono text-xs lg:text-sm"
@@ -172,7 +176,7 @@ export default function NewHttpToolPage() {
               {/* Query Parameters */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <Label className="text-sm font-medium text-foreground">Query Parameters</Label>
+                  <Label className="text-sm font-medium text-foreground">{t("httpTool.queryParams")}</Label>
                   <Button
                     variant="outline"
                     size="sm"
@@ -180,20 +184,20 @@ export default function NewHttpToolPage() {
                     className="rounded-lg bg-transparent text-xs"
                   >
                     <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                    Agregar
+                    {t("httpTool.add")}
                   </Button>
                 </div>
                 <div className="space-y-2">
                   {queryParams.map((param, index) => (
                     <div key={index} className="flex flex-col sm:flex-row gap-2">
                       <Input
-                        placeholder="key"
+                        placeholder={t("common.key")}
                         value={param.key}
                         onChange={(e) => updateQueryParam(index, "key", e.target.value)}
                         className="rounded-xl bg-input border-border font-mono text-xs lg:text-sm flex-1"
                       />
                       <Input
-                        placeholder="value"
+                        placeholder={t("common.value")}
                         value={param.value}
                         onChange={(e) => updateQueryParam(index, "value", e.target.value)}
                         className="rounded-xl bg-input border-border font-mono text-xs lg:text-sm flex-1"
@@ -214,10 +218,10 @@ export default function NewHttpToolPage() {
               {/* Headers */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <Label className="text-sm font-medium text-foreground">Headers</Label>
+                  <Label className="text-sm font-medium text-foreground">{t("httpTool.headers")}</Label>
                   <Button variant="outline" size="sm" onClick={addHeader} className="rounded-lg bg-transparent text-xs">
                     <Plus className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
-                    Agregar
+                    {t("httpTool.add")}
                   </Button>
                 </div>
                 <div className="space-y-2">
@@ -251,7 +255,7 @@ export default function NewHttpToolPage() {
               {/* Body (for POST, PUT, PATCH) */}
               {["POST", "PUT", "PATCH"].includes(method) && (
                 <div>
-                  <Label className="text-sm font-medium text-foreground mb-2 block">Request Body (JSON)</Label>
+                  <Label className="text-sm font-medium text-foreground mb-2 block">{t("httpTool.body")}</Label>
                   <Textarea
                     placeholder='{\n  "key": "value"\n}'
                     value={body}
@@ -267,7 +271,7 @@ export default function NewHttpToolPage() {
           {/* Test Request */}
           <Card className="rounded-2xl bg-card border-border p-4 lg:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <h3 className="text-base lg:text-lg font-semibold text-foreground">Probar Request</h3>
+              <h3 className="text-base lg:text-lg font-semibold text-foreground">{t("httpTool.testRequest")}</h3>
               <Button
                 onClick={handleTestRequest}
                 disabled={!url || testStatus === "loading"}
@@ -276,12 +280,12 @@ export default function NewHttpToolPage() {
                 {testStatus === "loading" ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Probando...
+                    {t("httpTool.testing")}
                   </>
                 ) : (
                   <>
                     <Play className="w-4 h-4 mr-2" />
-                    Probar Request
+                    {t("httpTool.test")}
                   </>
                 )}
               </Button>
@@ -296,7 +300,7 @@ export default function NewHttpToolPage() {
                       className="rounded-full bg-blue-500/10 text-blue-500 border-blue-500/30 text-xs"
                     >
                       <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                      Ejecutando...
+                      {t("httpTool.executing")}
                     </Badge>
                   )}
                   {testStatus === "success" && (
@@ -305,7 +309,7 @@ export default function NewHttpToolPage() {
                       className="rounded-full bg-green-500/10 text-green-500 border-green-500/30 text-xs"
                     >
                       <Check className="w-3 h-3 mr-1" />
-                      Éxito
+                      {t("httpTool.success")}
                     </Badge>
                   )}
                   {testStatus === "error" && (
@@ -314,7 +318,7 @@ export default function NewHttpToolPage() {
                       className="rounded-full bg-red-500/10 text-red-500 border-red-500/30 text-xs"
                     >
                       <AlertCircle className="w-3 h-3 mr-1" />
-                      Error
+                      {t("httpTool.error")}
                     </Badge>
                   )}
                 </div>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Bot, Mail, Lock, User, ArrowRight } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -15,22 +16,20 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useI18n()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden")
       return
     }
     setIsLoading(true)
-    // TODO: Implement Supabase registration
     setTimeout(() => setIsLoading(false), 1000)
   }
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-[#0D0F12] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
-        {/* Logo - responsive sizing */}
         <div className="flex items-center justify-center mb-6 sm:mb-8">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#5B9FFF] to-[#4A7FCC] flex items-center justify-center">
             <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
@@ -40,14 +39,14 @@ export default function RegisterPage() {
 
         <div className="bg-[#1A1D24] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="mb-5 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Crea tu cuenta</h2>
-            <p className="text-gray-400 text-sm">Comienza gratis, sin tarjeta de crédito</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{t("auth.createAccount")}</h2>
+            <p className="text-gray-400 text-sm">{t("auth.createAccountSubtitle")}</p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4 sm:space-y-5">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-gray-300 text-sm font-medium">
-                Nombre completo
+                {t("auth.name")}
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -65,7 +64,7 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-300 text-sm font-medium">
-                Email
+                {t("auth.email")}
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -84,7 +83,7 @@ export default function RegisterPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-gray-300 text-sm font-medium">
-                  Contraseña
+                  {t("auth.password")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -103,7 +102,7 @@ export default function RegisterPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword" className="text-gray-300 text-sm font-medium">
-                  Confirmar
+                  {t("auth.confirmPassword")}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -119,7 +118,6 @@ export default function RegisterPage() {
                 </div>
               </div>
             </div>
-            <p className="text-xs text-gray-500 -mt-2">Mínimo 8 caracteres</p>
 
             <Button
               type="submit"
@@ -129,11 +127,11 @@ export default function RegisterPage() {
               {isLoading ? (
                 <span className="flex items-center">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                  Creando cuenta...
+                  {t("common.loading")}
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
-                  Crear cuenta gratis
+                  {t("auth.register")}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </span>
               )}
@@ -142,24 +140,13 @@ export default function RegisterPage() {
 
           <div className="mt-5 sm:mt-6 text-center">
             <p className="text-gray-400 text-sm">
-              ¿Ya tienes una cuenta?{" "}
+              {t("auth.hasAccount")}{" "}
               <Link href="/login" className="text-[#5B9FFF] hover:text-[#4A8FEF] font-medium transition-colors">
-                Inicia sesión
+                {t("auth.login")}
               </Link>
             </p>
           </div>
         </div>
-
-        <p className="text-center text-gray-500 text-xs mt-6 sm:mt-8 px-4">
-          Al registrarte, aceptas nuestros{" "}
-          <Link href="/terms" className="text-gray-400 hover:text-gray-300 transition-colors">
-            Términos de Servicio
-          </Link>{" "}
-          y{" "}
-          <Link href="/privacy" className="text-gray-400 hover:text-gray-300 transition-colors">
-            Política de Privacidad
-          </Link>
-        </p>
       </div>
     </div>
   )
