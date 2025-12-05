@@ -13,6 +13,7 @@
     "db:apply-rls": "node scripts/apply-rls.js"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.53",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -44,6 +45,7 @@
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.86.2",
     "@vercel/analytics": "latest",
+    "ai": "^5.0.107",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
