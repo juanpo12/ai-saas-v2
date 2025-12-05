@@ -8,6 +8,13 @@
       "when": 1764954512538,
       "tag": "0000_medical_george_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764958500347,
+      "tag": "0001_furry_rattler",
+      "breakpoints": true
     }
   ]
 }

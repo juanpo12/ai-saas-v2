@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Bot, Mail, Lock, User, ArrowRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { supabase } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -14,6 +17,8 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useI18n()
+  const router = useRouter()
+  const { toast } = useToast()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,7 +26,45 @@ export default function RegisterPage() {
       return
     }
     setIsLoading(true)
-    setTimeout(() => setIsLoading(false), 1000)
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          },
+        },
+      })
+
+      if (error) {
+        toast({ title: "Error al registrar", description: error.message })
+        setIsLoading(false)
+        return
+      }
+
+      const user = data.user
+      const session = data.session
+
+      if (user && session) {
+        const { error: insertError } = await supabase.from("profiles").insert({
+          user_id: user.id,
+          full_name: name,
+          plan: "free",
+        })
+        if (insertError) {
+          toast({ title: "Error al crear perfil", description: insertError.message })
+        }
+        router.push("/")
+        return
+      }
+
+      // Si hay verificación por email (session nula), redirige al login
+      toast({ title: "Verifica tu email", description: "Te enviamos un correo para confirmar tu cuenta" })
+      router.push("/login")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

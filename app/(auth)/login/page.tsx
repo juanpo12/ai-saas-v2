@@ -9,17 +9,49 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Bot, Mail, Lock, ArrowRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
+import { supabase } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useI18n()
+  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setTimeout(() => setIsLoading(false), 1000)
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setIsLoading(false)
+        return
+      }
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user) {
+        const metaName = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || null
+        const fallbackName = user.email ? user.email.split("@")[0] : null
+        await supabase
+          .from("profiles")
+          .upsert(
+            { user_id: user.id, full_name: metaName ?? fallbackName, plan: "free" },
+            { onConflict: "user_id" },
+          )
+      }
+
+      const redirectTo =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("redirectTo") || "/"
+          : "/"
+      router.push(redirectTo)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
