@@ -105,7 +105,7 @@ export default function MessagesLayout({ children }: { children: React.ReactNode
                   )}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-chart-3 flex items-center justify-center text-xs font-semibold text-white shrink-0">
                       {conversation.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -116,7 +116,7 @@ export default function MessagesLayout({ children }: { children: React.ReactNode
                       <div className="flex items-center justify-between">
                         <p className="text-xs text-muted-foreground truncate">{conversation.lastMessage}</p>
                         {conversation.unread > 0 && (
-                          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-xs font-semibold text-primary-foreground ml-2 flex-shrink-0">
+                          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-xs font-semibold text-primary-foreground ml-2 shrink-0">
                             {conversation.unread}
                           </div>
                         )}

@@ -153,7 +153,7 @@ export default function KeysPage() {
 
       <div className="p-6 rounded-2xl bg-yellow-500/10 border border-yellow-500/20">
         <div className="flex gap-3">
-          <div className="w-5 h-5 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div className="w-5 h-5 rounded-full bg-yellow-500/20 flex items-center justify-center shrink-0 mt-0.5">
             <span className="text-yellow-500 text-xs">!</span>
           </div>
           <div>

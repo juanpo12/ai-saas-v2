@@ -198,14 +198,14 @@ export default function PricingPage() {
             return (
               <div
                 key={plan.name}
-                className={`relative bg-[#1A1D24] border rounded-2xl p-5 sm:p-8 transition-all duration-300 hover:scale-[1.02] min-w-[280px] sm:min-w-0 snap-center flex-shrink-0 md:flex-shrink ${
+                className={`relative bg-[#1A1D24] border rounded-2xl p-5 sm:p-8 transition-all duration-300 hover:scale-[1.02] min-w-[280px] sm:min-w-0 snap-center shrink-0 md:shrink ${
                   plan.popular
                     ? "border-[#5B9FFF] shadow-xl shadow-[#5B9FFF]/10"
                     : "border-white/10 hover:border-white/20"
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 bg-gradient-to-r from-[#5B9FFF] to-[#4A7FCC] rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
+                  <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 bg-linear-to-r from-[#5B9FFF] to-[#4A7FCC] rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
                     {t("pricing.popular")}
                   </div>
                 )}
@@ -241,11 +241,11 @@ export default function PricingPage() {
                   {plan.features.map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-2 sm:gap-3">
                       {feature.included ? (
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#5B9FFF]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#5B9FFF]/10 flex items-center justify-center shrink-0 mt-0.5">
                           <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#5B9FFF]" />
                         </div>
                       ) : (
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white/5 flex items-center justify-center shrink-0 mt-0.5">
                           <X className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-gray-600" />
                         </div>
                       )}

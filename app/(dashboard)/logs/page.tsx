@@ -75,7 +75,7 @@ export default function LogsPage() {
             className="p-4 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-200"
           >
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 mt-1">
+              <div className="shrink-0 mt-1">
                 {log.level === "error" && (
                   <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
                     <AlertCircle className="w-4 h-4 text-red-500" />
