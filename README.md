@@ -1,11 +1,11 @@
-# AgentHub - SaaS AI Agent Dashboard
+# AI Agents Platform (ai-saas-v2)
 
-A modern, feature-rich SaaS platform for creating and managing AI agents. Built with Next.js 14, featuring a sleek dark mode interface inspired by Vercel, Replit, and Notion.
+Plataforma SaaS moderna para crear y gestionar agentes de IA. Construida con Next.js 15, estilo dark minimalista inspirado en Vercel/Replit/Notion.
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat-square&logo=tailwindcss)
-![Supabase](https://img.shields.io/badge/Supabase-Ready-3ecf8e?style=flat-square&logo=supabase)
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38bdf8?style=flat-square&logo=tailwindcss)
+![Supabase](https://img.shields.io/badge/Supabase-Auth-3ecf8e?style=flat-square&logo=supabase)
 
 ---
 
@@ -41,7 +41,7 @@ AgentHub empowers users to create, configure, and deploy AI agents with ease. Co
 
 | Category | Technology |
 |----------|------------|
-| Framework | Next.js 14 (App Router) |
+| Framework | Next.js 15 (App Router) |
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 |
 | UI Components | shadcn/ui + Radix UI |
@@ -116,8 +116,8 @@ AgentHub empowers users to create, configure, and deploy AI agents with ease. Co
 
 \`\`\`bash
 # Clone the repository
-git clone https://github.com/yourusername/agenthub.git
-cd agenthub
+git clone https://github.com/juanpo12/ai-saas-v2.git
+cd ai-saas-v2
 
 # Install dependencies
 pnpm install
@@ -133,9 +133,9 @@ pnpm dev
 
 \`\`\`env
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -143,7 +143,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ## Roadmap
 
-- [ ] Supabase authentication integration
+- [x] Supabase authentication (login, register, reset)
 - [ ] Database schema & migrations
 - [ ] Real-time message sync
 - [ ] Stripe payment integration

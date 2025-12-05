@@ -43,7 +43,7 @@ export function AgentsView() {
   const { t } = useI18n()
 
   const handleCreateAgent = (agentData: any) => {
-    console.log("[v0] Creating agent:", agentData)
+    setShowCreateDialog(false)
   }
 
   if (selectedAgent) {

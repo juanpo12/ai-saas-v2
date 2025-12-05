@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "AI Agents Platform",
   description: "Create and manage AI agents with ease",
-  generator: "v0.app",
 }
 
 export default function RootLayout({
