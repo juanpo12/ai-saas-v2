@@ -1,5 +1,4 @@
 type ToolContext = {
-  organizationId?: string
   agentId?: string
   agentName?: string
   hasSpecificKnowledge?: boolean
