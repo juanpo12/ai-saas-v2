@@ -1,51 +1,136 @@
 "use client"
 
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, Loader2, Bot } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useI18n } from "@/lib/i18n"
+import { useProviders } from "@/hooks/use-providers"
+import { logger } from "@/lib/logger"
+import { useToast } from "@/hooks/use-toast"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-const savedKeys = [
-  {
-    id: 1,
-    name: "Key para WhatsApp",
-    provider: "OpenAI",
-    icon: "https://cdn.simpleicons.org/openai/white",
-    created: "2024-01-15",
-    lastUsed: "Hace 2 horas",
-  },
-  {
-    id: 2,
-    name: "Producción Principal",
-    provider: "Anthropic",
-    icon: "https://cdn.simpleicons.org/anthropic/white",
-    created: "2024-01-10",
-    lastUsed: "Hace 1 día",
-  },
-  {
-    id: 3,
-    name: "Testing Gmail",
-    provider: "Google",
-    icon: "https://cdn.simpleicons.org/google/white",
-    created: "2024-01-05",
-    lastUsed: "Hace 3 días",
-  },
+const PROVIDER_OPTIONS = [
+  { slug: "openai", name: "OpenAI" },
+  { slug: "anthropic", name: "Anthropic" },
+  { slug: "google", name: "Google" },
+  { slug: "groq", name: "Groq" },
+  { slug: "mistral", name: "Mistral" },
 ]
 
-const providers = [
-  { name: "OpenAI", icon: "https://cdn.simpleicons.org/openai/white" },
-  { name: "Anthropic", icon: "https://cdn.simpleicons.org/anthropic/white" },
-  { name: "Google", icon: "https://cdn.simpleicons.org/google/white" },
-  { name: "Groq", icon: "https://cdn.simpleicons.org/meta/white" },
-  { name: "Mistral", icon: "https://cdn.simpleicons.org/mistral/white" },
-]
+function brandColor(slug: string) {
+  switch (slug) {
+    case "openai":
+      return "#10b981"
+    case "anthropic":
+      return "#8b5cf6"
+    case "google":
+      return "#4285F4"
+    case "groq":
+      return "#ef4444"
+    case "mistral":
+      return "#f97316"
+    default:
+      return "#64748b"
+  }
+}
+
+function sourcesForSlug(slug: string) {
+  const s = slug.toLowerCase()
+  return [
+    `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${s}.svg`,
+    `https://unpkg.com/simple-icons/icons/${s}.svg`,
+    `https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/${s}.svg`,
+  ]
+}
+
+function BrandIcon({ slug, name, className }: { slug: string; name: string; className?: string }) {
+  const [idx, setIdx] = useState(0)
+  const sources = sourcesForSlug(slug)
+  const src = sources[idx]
+  return src ? (
+    <img
+      src={src}
+      alt={name}
+      className={className ?? "w-6 h-6 mx-auto mb-2"}
+      style={{ filter: "invert(1)" }}
+      onError={() => setIdx((i) => (i + 1 < sources.length ? i + 1 : i))}
+    />
+  ) : (
+    <div className={className ?? "w-6 h-6 mx-auto mb-2 flex items-center justify-center"}>
+      <Bot className="w-5 h-5 text-primary" />
+    </div>
+  )
+}
 
 export default function KeysPage() {
   const [showNewKeyForm, setShowNewKeyForm] = useState(false)
-  const [selectedProvider, setSelectedProvider] = useState("")
+  const [selectedProvider, setSelectedProvider] = useState<string>("")
   const [keyName, setKeyName] = useState("")
   const [apiKey, setApiKey] = useState("")
   const { t } = useI18n()
+  const { keys, loading, error, refresh, addProvider, deleteKey } = useProviders()
+  const { toast } = useToast()
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (error) {
+      toast({ title: "Error", description: error })
+    }
+  }, [error, toast])
+
+  const providerCards = useMemo(
+    () => PROVIDER_OPTIONS.map((p) => ({ ...p })),
+    [],
+  )
+
+  async function handleSave() {
+    try {
+      const selected = PROVIDER_OPTIONS.find((p) => p.slug === selectedProvider)
+      if (!selected) {
+        toast({ title: "Selecciona un proveedor", description: "Debes elegir un proveedor para guardar la key." })
+        return
+      }
+      if (!keyName.trim() || !apiKey.trim()) {
+        toast({ title: "Campos requeridos", description: "Nombre e API Key son obligatorios." })
+        return
+      }
+      await addProvider({ slug: selected.slug, name: selected.name, key: apiKey.trim(), label: keyName.trim() })
+      toast({ title: "Key guardada", description: "La key fue almacenada de forma segura." })
+      setShowNewKeyForm(false)
+      setKeyName("")
+      setApiKey("")
+      setSelectedProvider("")
+      await refresh()
+    } catch (e) {
+      logger.error("Error al guardar provider/key:", e)
+      toast({
+        title: "Error al guardar",
+        description: e instanceof Error ? e.message : "Error desconocido",
+      })
+    }
+  }
+  async function handleDelete(id: string) {
+    try {
+      await deleteKey(id)
+      toast({ title: "Key eliminada", description: "La key fue eliminada correctamente." })
+    } catch (e) {
+      logger.error("Error al eliminar key:", e)
+      toast({
+        title: "Error al eliminar",
+        description: e instanceof Error ? e.message : "Error desconocido",
+      })
+    }
+  }
 
   return (
     <div className="p-8 space-y-6">
@@ -70,17 +155,17 @@ export default function KeysPage() {
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground">{t("keys.provider")}</label>
             <div className="grid grid-cols-5 gap-2">
-              {providers.map((provider) => (
+              {providerCards.map((provider) => (
                 <button
-                  key={provider.name}
-                  onClick={() => setSelectedProvider(provider.name)}
+                  key={provider.slug}
+                  onClick={() => setSelectedProvider(provider.slug)}
                   className={`p-4 rounded-xl border transition-all duration-200 ${
-                    selectedProvider === provider.name
+                    selectedProvider === provider.slug
                       ? "border-primary bg-primary/10"
                       : "border-border bg-background hover:border-primary/50"
                   }`}
                 >
-                  <img src={provider.icon || "/placeholder.svg"} alt={provider.name} className="w-6 h-6 mx-auto mb-2" />
+                  <BrandIcon slug={provider.slug} name={provider.name} />
                   <p className="text-xs text-center text-foreground">{provider.name}</p>
                 </button>
               ))}
@@ -110,7 +195,9 @@ export default function KeysPage() {
           </div>
 
           <div className="flex gap-2">
-            <Button className="rounded-xl bg-primary hover:bg-primary/90">{t("keys.save")}</Button>
+            <Button className="rounded-xl bg-primary hover:bg-primary/90" onClick={handleSave}>
+              {t("keys.save")}
+            </Button>
             <Button variant="outline" className="rounded-xl bg-transparent" onClick={() => setShowNewKeyForm(false)}>
               {t("keys.cancel")}
             </Button>
@@ -119,36 +206,81 @@ export default function KeysPage() {
       )}
 
       <div className="space-y-3">
-        {savedKeys.map((key) => (
-          <div
-            key={key.id}
-            className="p-5 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 flex-1">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center p-2">
-                  <img src={key.icon || "/placeholder.svg"} alt={key.provider} className="w-full h-full" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">{key.name}</h3>
-                    <span className="text-xs px-2 py-0.5 rounded-md bg-primary/10 text-primary">{key.provider}</span>
+        {loading && (
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Cargando keys...</span>
+          </div>
+        )}
+        {!loading && keys.length === 0 && (
+          <div className="text-sm text-muted-foreground">{t("keys.empty")}</div>
+        )}
+        {!loading &&
+          keys.map((key) => (
+            <div
+              key={key.id}
+              className="p-5 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-200"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center p-2">
+                    <BrandIcon slug={key.provider_slug} name={key.provider_name} className="w-6 h-6" />
                   </div>
-                  <div className="flex items-center gap-4 mt-1">
-                    <span className="text-xs text-muted-foreground">
-                      {t("keys.createdAt")}: {key.created}
-                    </span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-foreground">{key.label}</h3>
+                      <span className="text-xs px-2 py-0.5 rounded-md bg-primary/10 text-primary">
+                        {key.provider_name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 mt-1">
+                      <span className="text-xs text-muted-foreground">
+                        {t("keys.createdAt")}: {new Date(key.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="rounded-lg text-red-500 hover:text-red-600">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-lg text-red-500 hover:text-red-600"
+                        onClick={() => setPendingDeleteId(key.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("keys.confirmDeleteTitle") || "Eliminar key"}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("keys.confirmDeleteDesc") || "Esta acción no se puede deshacer. ¿Seguro que quieres eliminar esta key?"}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setPendingDeleteId(null)}>
+                          {t("keys.cancel") || "Cancelar"}
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={async () => {
+                            if (pendingDeleteId) {
+                              await handleDelete(pendingDeleteId)
+                              setPendingDeleteId(null)
+                            }
+                          }}
+                          className="bg-red-500 hover:bg-red-600 text-white"
+                        >
+                          {t("keys.delete") || "Eliminar"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="p-6 rounded-2xl bg-yellow-500/10 border border-yellow-500/20">

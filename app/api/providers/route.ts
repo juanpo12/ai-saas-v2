@@ -152,3 +152,36 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServer();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user?.id) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+    const body = await request.json().catch(() => ({}));
+    const id = (body?.id ?? "").toString();
+    if (!id) {
+      return NextResponse.json({ error: "Campo requerido: id" }, { status: 400 });
+    }
+    const existing = await db
+      .select()
+      .from(provider_keys)
+      .where(and(eq(provider_keys.id, id), eq(provider_keys.user_id, user.id as string)))
+      .limit(1);
+    if (existing.length === 0) {
+      return NextResponse.json({ error: "Key no encontrada" }, { status: 404 });
+    }
+    await db.delete(provider_keys).where(eq(provider_keys.id, id));
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    logger.error("Error eliminando provider key:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Error desconocido" },
+      { status: 500 },
+    );
+  }
+}

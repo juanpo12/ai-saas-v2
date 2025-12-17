@@ -312,6 +312,21 @@ export const translations: Translations = {
     pt: "Key oculta por segurança",
   },
   "keys.createdAt": { es: "Creada el", en: "Created on", pt: "Criada em" },
+  "keys.confirmDeleteTitle": {
+    es: "Confirmar Eliminación",
+    en: "Confirm Deletion",
+    pt: "Confirmar Exclusão",
+  },
+  "keys.confirmDeleteDesc": {
+    es: "Esta acción no se puede deshacer. ¿Seguro que quieres eliminar esta key?",
+    en: "This action cannot be undone. Are you sure you want to delete this key?",
+    pt: "Esta ação não pode ser desfeita. Tem certeza que quer excluir esta key?",
+  },
+  "keys.empty": {
+    es: "No tienes keys aún",
+    en: "You don't have keys yet",
+    pt: "Você ainda não tem keys",
+  },
 
   // Messages
   "messages.title": { es: "Mensajes", en: "Messages", pt: "Mensagens" },

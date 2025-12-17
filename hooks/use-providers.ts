@@ -79,6 +79,19 @@ export function useProviders(initialSlug?: string) {
     return data.data
   }, [])
 
+  const deleteKey = useCallback(async (id: string) => {
+    const res = await fetch('/api/providers', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      throw new Error(data?.error || 'Error deleting key')
+    }
+    setKeys((prev) => prev.filter((k) => k.id !== id))
+  }, [])
+
   const bySlug = useMemo(() => {
     const map = new Map<string, { slug: string; name: string; keys: ProviderKeyRecord[] }>()
     for (const k of keys) {
@@ -110,5 +123,6 @@ export function useProviders(initialSlug?: string) {
     addProvider,
     decryptKey,
     getBySlug,
+    deleteKey,
   }
 }
