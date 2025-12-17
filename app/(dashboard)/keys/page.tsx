@@ -1,5 +1,4 @@
 "use client"
-
 import { Plus, Trash2, Loader2, Bot } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useMemo, useState } from "react"
@@ -26,23 +25,6 @@ const PROVIDER_OPTIONS = [
   { slug: "groq", name: "Groq" },
   { slug: "mistral", name: "Mistral" },
 ]
-
-function brandColor(slug: string) {
-  switch (slug) {
-    case "openai":
-      return "#10b981"
-    case "anthropic":
-      return "#8b5cf6"
-    case "google":
-      return "#4285F4"
-    case "groq":
-      return "#ef4444"
-    case "mistral":
-      return "#f97316"
-    default:
-      return "#64748b"
-  }
-}
 
 function sourcesForSlug(slug: string) {
   const s = slug.toLowerCase()
