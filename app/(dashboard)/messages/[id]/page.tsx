@@ -4,6 +4,7 @@ import { Send, MoreVertical, Phone, Video, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 
 const chatMessages = [
   {
@@ -44,8 +45,9 @@ const chatMessages = [
   },
 ]
 
-export default function ChatPage({ params }: { params: { id: string } }) {
+export default function ChatPage() {
   const [message, setMessage] = useState("")
+  const params = useParams()
 
   return (
     <div className="flex flex-col h-full">
